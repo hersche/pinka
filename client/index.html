@@ -28,6 +28,7 @@
                 <h2>Hello!</h2>
                 <p>Type a nick below or leave it empty.</p>
                 <input type="text" id="nickInput" placeholder="Nick" maxlength="14">
+                <select type="text" id="skynInput"></select>
                 <div id="buttons">
                     <button id="playButton">Play</button>
                     <button id="settingsButton">Settings</button>
@@ -74,9 +75,9 @@
         };
 
         var settings = {
-            skin: false,
-            name: false,
-            chatbox: false
+            skin: true,
+            name: true,
+            chatbox: true
         };
         function initSettings() {
             var boxes = document.querySelectorAll("input[type='checkbox']");
@@ -94,6 +95,7 @@
 
         var playButton = document.getElementById("playButton");
         var nickInput = document.getElementById("nickInput");
+        var skynInput = document.getElementById("skynInput");
         var chatArea = document.getElementById("chatArea");
 
         var menuHidden = true;
@@ -106,7 +108,7 @@
 
             var selectedMode = gamemodes.options[gamemodes.selectedIndex].value;
 
-            var d = [ selectedMode, nickInput.value ];
+            var d = [ selectedMode, nickInput.value, skynInput.value ];
             overlay.style.display = "none";
             socket.emit("join game", d);
         };
@@ -265,15 +267,18 @@
         };
 
         var skinArr = skins.split("\n");
+        var skynInputElement = document.getElementById("skynInput");
+        var skynList = "";
+        skinArr.forEach(element => skynList += "<option>"+element+"</option>");
+        skynInputElement.innerHTML = skynList;
         function drawSkin(node) {
-            if(skinArr.indexOf(node.nick.toUpperCase()) == -1) {
+            if(node.skyn == "" || skinArr.indexOf(node.skyn.toUpperCase()) == -1) {
                 return;
             }
 
             var r = node.size;
             var skin = new Image();
-            skin.src = "http://agarioskins.com/img/skin/" + node.nick + ".png";
-
+            skin.src = "/skins/" + node.skyn.toUpperCase() + ".png";
             ctx.save();
             ctx.translate(node.x, node.y);
             ctx.beginPath();
@@ -291,14 +296,15 @@
                 x: arr[1],
                 y: arr[2],
                 nick: arr[3],
-                size: arr[4],
-                hue: arr[5],
-                isAgitated: arr[6],
-                nodeType: arr[7],
+                skyn: arr[4],
+                size: arr[5],
+                hue: arr[6],
+                isAgitated: arr[7],
+                nodeType: arr[8],
 
-                newX: arr[1],
-                newY: arr[2],
-                newSize: arr[4]
+                newX: arr[9],
+                newY: arr[10],
+                newSize: arr[11]
             };
             blobs.push(blob);
         };

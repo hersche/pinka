@@ -34,6 +34,7 @@ function Blob(server, nodeId, x, y, mass, parent) {
 	this._mass = mass;
 
 	this.nick = "";
+    this.skyn = "";
 	
 	this.parent = parent;
 	this.hue = Math.random() * 360;
@@ -277,6 +278,14 @@ function Player(server) {
 Player.prototype.setNick = function(n) {
 	this.nick = n;
 };
+
+Player.prototype.setAvatar = function(n) {
+	this.skyn = n;
+};
+Player.prototype.getAvatar = function() {
+	return this.skyn == "" ? "None" : this.skyn;
+};
+
 Player.prototype.getNick = function() {
 	return this.nick == "" ? "Unnamed" : this.nick;
 };
@@ -387,10 +396,10 @@ function Server() {
 		height: 14000
 	};
 };
-Server.prototype.createPlayer = function(id, nick) {
+Server.prototype.createPlayer = function(id, nick, skyn) {
 	var player = new Player(this);
 	player.setNick(nick);
-
+    player.setAvatar(skyn);
 	// -=+++=---====
 	player.id = id;
 	// +++---=+++=0==
@@ -415,6 +424,7 @@ Server.prototype.createPlayerBlob = function(x, y, mass, angle, parentBlob, pare
 	}
 
 	playerBlob.nick = parent.getNick();
+    playerBlob.skyn = parent.getAvatar();
 	parent.blobs.push(playerBlob);
 	return playerBlob;
 };
@@ -768,11 +778,12 @@ io.on("connection", function(socket) {
 
 		var servKey = d[0];
 		var nick = d[1];
+        var skyn = d[2];
 
 		// player.server = servers[key];
 
 		player.setNick(nick);
-
+        player.setAvatar(skyn);
 		player.joined = true;
 		socket.emit("joined");
 
@@ -795,21 +806,19 @@ io.on("connection", function(socket) {
 
 
 		var init = [];
-
 		player.visibleNodes.forEach(function(b) {
 			init.push([
 				b.sendId,
 	 			Math.round(b.x),
 	 			Math.round(b.y),
 	 			b.nick,
+                b.skyn,
 	 			Math.round(Math.sqrt(b.mass) * 10),
 	 			Math.round(b.hue),
 	 			b.isAgitated,
 	 			b.nodeType]);
 		})
 		socket.emit("init blobs", init);
-
-
 		console.log("connected");
 		console.log("players: " + server.players.length);
 
@@ -866,6 +875,7 @@ setInterval(function() {
 	 			Math.round(b.x),
 	 			Math.round(b.y),
 	 			b.nick,
+                b.skyn,
 	 			Math.round(Math.sqrt(b.mass) * 10),
 	 			Math.round(b.hue),
 	 			b.isAgitated,
