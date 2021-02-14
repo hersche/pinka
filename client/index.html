@@ -268,7 +268,7 @@
 
         var skinArr = skins.split("\n");
         var skynInputElement = document.getElementById("skynInput");
-        var skynList = "";
+        var skynList = "<option>No skin</option>";
         skinArr.forEach(element => skynList += "<option>"+element+"</option>");
         skynInputElement.innerHTML = skynList;
         function drawSkin(node) {
