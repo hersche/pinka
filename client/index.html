@@ -457,10 +457,12 @@
 
             for(var i = 0; i < blobs.length; i++) {
                 var node = blobs[i];
-                node.x = lerp(node.x, node.newX);
-                node.y = lerp(node.y, node.newY);
-                node.size = lerp(node.size, node.newSize);
-                
+                if(node.nodeType != 2) {
+                    node.x = lerp(node.x, node.newX);
+                    node.y = lerp(node.y, node.newY);
+                    node.size = lerp(node.size, node.newSize);
+                }
+
                 drawNode(node);
             };
 
