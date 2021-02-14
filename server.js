@@ -265,6 +265,7 @@ function Player(server) {
 	this.removedVisibleNodes = [];
 
 	this.nick = "";
+    this.avatar = "";
 
 	this.drawZoom = 1;
 	this.centerX = 0;
@@ -382,7 +383,7 @@ function Server() {
 		ejectMass: 10,
 		foodMass: 5,
 
-		playerStartMass: 1302,
+		playerStartMass: 50,
 		playerMinMassForSplit: 20,
 		playerMinMassForEject: 20,
 		playerMaxMass: 20000,
