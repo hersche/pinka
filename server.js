@@ -393,8 +393,8 @@ function Server() {
 
 		baseTime: 60000,
 
-		width: 14000,
-		height: 14000
+		width: 28000,
+		height: 28000
 	};
 };
 Server.prototype.createPlayer = function(id, nick, skyn) {
